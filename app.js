@@ -13,7 +13,7 @@ var app = express();
 
 // database setup
 require('./models/Accounts');
-mongoose.connect('mongodb://localhost/bank');
+mongoose.connect('mongodb://localhost/best-bank');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

@@ -1,0 +1,110 @@
+﻿<!DOCTYPE html>
+<html lang="en" ng-app="myModule">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Financial goals</title>
+
+    <!-- Bootstrap -->
+   
+    <script src="scripts/angular.min.js"></script>
+    <script src="scripts/main.js"></script>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="styles/tableStyles.css" rel="stylesheet" />
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body ng-cloak>
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <button type="button" class="navbar-toggle"
+            data-toggle="collapse"
+            data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <div class="navbar-brand"> SomeBank.com</div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#">Home</a></li>
+                    <li class="active"><a href="#">Financial goals</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid" ng-controller="myController">
+        <div class="row">
+            <div class="col-sm-3 col-md-2 sidebar">
+                Sidebar here
+            </div>
+            <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-3">
+                <h1 class="page-header">Welcome, {{user.name}} </h1>
+                <h2> Your current balance is: {{user.balance|currency:"R"}} </h2><br />
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Goal</th>
+                            <th>target</th>
+                            <th>current</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="goal in goals">
+                            <td>{{goal.name}}</td>
+                            <td>{{goal.target | currency:"R"}}</td>
+                            <td>{{goal.current | currency:"R"}}</td>
+                        </tr>
+                    </tbody>
+                </table> <br />
+
+                <div class="container">
+                    <input type="button" value="Add goal" class="btn-primary" style="background-color:darkmagenta;border-color:seashell" data-toggle="modal" data-target="#modal-1" />
+                    <div class="modal fade" id="modal-1">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h3 class="modal-title">Add a goal</h3>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label for="usr">Name:</label>
+                                        <input type="text" class="form-control" id="usr" ng-model="goalName">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="pwd">Target (Rands):</label>
+                                        <input type="text" class="form-control" id="pwd" ng-model="goalTarget">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="pwd">Current (Rands):</label>
+                                        <input type="text" class="form-control" id="usr" ng-model="goalCurrent">
+                                    </div>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <input type="button" value="Cancel" class="btn btn-default" data-dismiss="modal" ng-click="ClearGoal()">
+                                    <input type="button" value="Add goal" class="btn btn-primary" data-dismiss="modal" ng-click="AddToGoals()">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <!-- Include all compiled plugins (below), or include individual files as needed -->
+        <script src="js/bootstrap.min.js"></script>
+</body>
+</html>

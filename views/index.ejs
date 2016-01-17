@@ -70,10 +70,21 @@
                 <div class="row">
                     <div ng-repeat="goal in account.goals">
                         <div class="col-sm-3 card">
-                            <h3>{{goal.goal}}</h3>
-                            <p>R{{goal.target}}</p>
-                            <p>R{{goal.current}}</p>
-                            <p>{{goal.current*100/goal.target}}%</p>
+                            <h3><strong>{{goal.goal | uppercase}}</strong></h3>
+                            <p>Target: R{{goal.target}}</p>
+                            <p>Current Amount: R{{goal.current}}</p>
+							
+							<div class='progress'>
+							<div class="progress-bar" role="progressbar" aria-valuenow=" {{goal.current*100/goal.target}}" aria-valuemin="0" aria-valuemax="100" style="width: {{goal.current*100/goal.target}}%"> {{goal.current*100/goal.target}}%</div></br>
+							</div>
+							<div class='showAddMenu' ng-hide='goal.adding' ng-click='showAddBox($index)'>Add Funds</div>
+							
+							<div ng-hide="goal.notAdding">
+								<input type="number" ng-model="goal.addedAmt">
+								<div class='addButton' style="display: inline;" ng-click="addToGoal($index)">ADD</div>
+							</div>
+							
+							<div></div>
                         </div>
                     </div>
                 </div>

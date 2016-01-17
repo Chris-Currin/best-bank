@@ -114,6 +114,7 @@ a {
     border-radius: 50%;
 }
 .card {
+	font-family: serif;
     position: relative;
     z-index: 2;
     padding: 1.5rem;
@@ -121,4 +122,23 @@ a {
     background: white;
     margin: 0 1rem 1rem;
     border-radius: 3px;
+	border: solid 3px blue;
+}
+
+.addButton{
+text-align: center;
+border-radius: 5px;
+border: solid 2px blue;
+width: 200px;
+cursor: pointer;
+font-size: 24px;
+}
+
+.showAddMenu{
+text-align: center;
+border-radius: 5px;
+border: solid 2px blue;
+width: 100%;
+cursor: pointer;
+font-size: 24px;
 }

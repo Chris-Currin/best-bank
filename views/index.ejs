@@ -77,7 +77,7 @@
 							<div class='progress'>
 							<div class="progress-bar" role="progressbar" aria-valuenow=" {{goal.current*100/goal.target}}" aria-valuemin="0" aria-valuemax="100" style="width: {{goal.current*100/goal.target}}%"> {{goal.current*100/goal.target}}%</div></br>
 							</div>
-							<div class='showAddMenu' ng-hide='goal.adding' ng-click='showAddBox($index)'>Add Funds</div>
+							<div class='showAddMenuBtn' ng-hide='goal.adding' ng-click='showAddBox($index)'>Add Funds</div>
 							
 							<div ng-hide="goal.notAdding">
 								<input type="number" ng-model="goal.addedAmt">
@@ -89,6 +89,22 @@
                     </div>
                 </div>
             </div>
+			<div class=" col-sm-9 col-md-10 addBeneficiary">
+				
+				<div class="addBeneficiaryBar" ng-click="showHideAddBeneficiary()">
+					<img src="http://images.all-free-download.com/images/graphiclarge/down_arrow_icon_vector_blue_background_281007.jpg" height="32px" width="32px"><h2 style="display: inline;">Add Beneficiary</h2>
+				</div>
+				
+				<div class="addBeneficiaryBox" ng-hide="hideAddBeneficiary">
+					<p>Beneficiary Name: </p><input type="string" ng-model="name"><br>
+					<p>Beneficiary Bank Name: </p><input type="string" ng-model="bankName"><br>
+					<p>Beneficiary Account Number: </p><input type="string" ng-model="accNum"><br>
+					<p></p>
+					<div class='addButton' style="display: inline;" ng-click="addBeneficiary()">ADD</div>
+					<p></p>
+				</div>
+            
+			</div>
         </div>
 </body>
 

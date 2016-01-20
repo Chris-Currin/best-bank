@@ -25,15 +25,43 @@ app.controller('MainCtrl', [
                 }
             ],
         };
+		
+		
+		//Goal Functions
 		$scope.addToGoal = function(index){
 			$scope.account.goals[index].current += $scope.account.goals[index].addedAmt;
 			$scope.account.balance -= $scope.account.goals[index].addedAmt;
 			$scope.account.goals[index].adding=false;
 			$scope.account.goals[index].notAdding=true;
+			$scope.account.goals[index].addedAmt = 0;
 		};
 		
 		$scope.showAddBox = function(index){
 			$scope.account.goals[index].adding = true;
 			$scope.account.goals[index].notAdding = false;
+		};
+		
+		//Beneficiary Variables
+		$scope.beneficiaries = new Array();
+		$scope.name = "";
+		$scope.bankName = "";
+		$scope.accNum = "";
+		$scope.hideAddBeneficiary = true;
+		
+		
+		//Beneficiary Functions
+		$scope.showHideAddBeneficiary = function(){
+			$scope.hideAddBeneficiary = !$scope.hideAddBeneficiary;
+		};
+		
+		$scope.addBeneficiary = function(){
+			$scope.beneficiaries.push({
+				name: $scope.name,
+				bankName: $scope.bankName,
+				accNum: $scope.accNum
+			});
+			$scope.name = "";
+			$scope.bankName = "";
+			$scope.accNum = "";
 		};
     }]);

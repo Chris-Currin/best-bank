@@ -134,11 +134,68 @@ cursor: pointer;
 font-size: 24px;
 }
 
-.showAddMenu{
+.addButton:hover{
+background-color: blue;
+color: #FFFFFF;
+}
+
+.showAddMenuBtn{
 text-align: center;
 border-radius: 5px;
 border: solid 2px blue;
 width: 100%;
 cursor: pointer;
 font-size: 24px;
+}
+
+.showAddMenuBtn:hover{
+background-color: blue;
+color: #FFFFFF;
+}
+
+.addBeneficiary{
+background: aqua;
+padding: 20px;
+position: relative;
+}
+.addBeneficiaryBar{
+min-height: 50px;
+cursor: pointer;
+border: solid 2px blue;
+border-radius: 3px;
+width: 100%;
+border-radius: 5px;
+padding-top: 8px;
+padding-left: 10px;
+background-color: white;
+}
+
+.addBeneficiaryBar:hover{
+color: #FFFFFF;
+background-color: blue;
+}
+
+.addBeneficiaryBar h2{
+padding-left: 5px;
+}
+
+.addBeneficiaryBox{
+margin-top: -2px;
+border: solid 2px blue;
+border-radius: 3px;
+background: white;
+}
+
+.addBeneficiaryBox p{
+padding-top: 20px;
+padding-left: 20px;
+}
+
+.addBeneficiaryBox input{
+margin-left: 20px;
+}
+
+.addBeneficiaryBox div{
+margin-top: 20px;
+margin-left: 20px;
 }

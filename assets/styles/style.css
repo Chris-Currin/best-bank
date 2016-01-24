@@ -1,0 +1,53 @@
+.md-3-line {}
+md-list-item.md-2-line .md-list-item-text,
+md-list-item.md-2-line>.md-no-style .md-list-item-text,
+md-list-item.md-3-line .md-list-item-text,
+md-list-item.md-3-line>.md-no-style .md-list-item-text {
+    /*padding: auto;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    padding-bottom: 100px;
+    background: green;
+    */
+}
+<md-list-item {
+    z-index: 1;
+}
+.img-list-item img {
+    z-index: 100;
+    background: red;
+}
+.img-list-item md-checkbox {
+    z-index: -1;
+}
+.avatar-offset {
+    width: 43px;
+    height: 43px;
+    margin-left: 1.2em;
+}
+
+/*
+md-list-item,
+md-list-item.md-3-line,
+md-list-item.md-3-line>.md-no-style,
+.md-button,
+.md-list-item-inner,
+.md-list-item-text {
+    -webkit-transition: .5s linear all;
+    transition: .5s linear all;
+}
+.ng-hide-add,
+.ng-hide-remove {
+
+    display: block !important;
+
+}
+.more {
+    -webkit-transition: .5s linear all;
+    transition: .5s linear all;
+    overflow: hidden;
+}
+.more.ng-hide {
+    height: 0;
+}
+*/

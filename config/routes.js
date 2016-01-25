@@ -32,31 +32,22 @@ module.exports.routes = {
      *                                                                          *
      ***************************************************************************/
 
-    '/': {
+    'GET /home': {
         view: 'homepage'
+    },
+    'GET /': {
+        view: 'layout'
+    },
+    'GET /chores': {
+        view: 'layout'
     }
-
-    /*,
-    '/login': {
-        controller: 'AuthController',
-        action: 'login'
-    },
-    '/logout': {
-        controller: 'AuthController',
-        action: 'logout'
-    },
-    '/register': {
-        controller: 'AuthController',
-        action: 'register'
-    },
-    '/auth/local': {
-        controller: 'AuthController',
-        action: 'callback'
-    },
-    '/auth/local/:action': {
-        controller: 'AuthController',
-        action: 'callback'
-    }
+    /*
+            '/': {
+            view: 'homepage'
+        },
+        '/chores': {
+            view: 'chores'
+        }
     */
     /*
     'get /login': 'AuthController.login',
@@ -69,7 +60,7 @@ module.exports.routes = {
     'get /auth/:provider': 'AuthController.provider',
     'get /auth/:provider/callback': 'AuthController.callback',
     'get /auth/:provider/:action': 'AuthController.callback',
-    */
+*/
     /***************************************************************************
      *                                                                          *
      * Custom routes here...                                                    *

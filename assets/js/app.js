@@ -1,16 +1,23 @@
 'use strict';
 
-var todoApp = angular.module('todoApp', ['ngRoute', 'ui.bootstrap', 'ngMaterial', 'ngAnimate']);
+var todoApp = angular.module('todoApp', ['ngRoute', 'ngMaterial', 'ngAnimate']);
+
 todoApp.config(['$routeProvider',
   function ($routeProvider) {
-        $routeProvider.when('/', {
+        $routeProvider.when('/chores', {
             templateUrl: '/templates/chores.html',
             controller: 'ChoreCtrl'
-        }).otherwise({
-            redirectTo: '/',
-            caseInsensitiveMatch: true
+        }).when('/', {
+            templateUrl: '/templates/empty.html',
+            controller: 'ChoreCtrl'
         });
-  }]);
+        /*.otherwise({
+              redirectTo: '/',
+              caseInsensitiveMatch: true
+          });
+          */
+}]);
+
 //-----------------------------------------------------------------------------------------
 //------------------------------------- Chore Controller
 //-----------------------------------------------------------------------------------------
@@ -114,6 +121,7 @@ todoApp.controller('ChoreCtrl', ['$scope', '$rootScope', '$mdDialog', '$mdMedia'
                 $scope.chores.splice($scope.chores.indexOf(chore), 1);
             });
         }
+        $scope.check_selected = false;
     };
     $scope.setUndone = function (chore) {
         if (typeof (chore) === 'undefined') {
@@ -144,6 +152,7 @@ todoApp.controller('ChoreCtrl', ['$scope', '$rootScope', '$mdDialog', '$mdMedia'
                 $scope.done_chores.splice($scope.done_chores.indexOf(chore), 1);
             });
         }
+        $scope.check_done_selected = false;
     };
     //-----------------------------------------------------------------------------------------
     //------------------------------------- Chore CRUD

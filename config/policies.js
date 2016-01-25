@@ -26,16 +26,8 @@ module.exports.policies = {
      *                                                                          *
      ***************************************************************************/
 
-    // '*': true,
-    /*'*': ['isAuthorized'], // Everything resctricted here
-    'UsersController': {
-        'create': true // We dont need authorization here, allowing public access
-    },
+    ' * ': true
 
-    'AuthController': {
-        '*': true // We dont need authorization here, allowing public access
-    }
-    */
     /***************************************************************************
      *                                                                          *
      * Here's an example of mapping some policies to run before a controller    *

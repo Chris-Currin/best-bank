@@ -1,0 +1,8 @@
+<md-content ng-controller="MedalsController" layout='row' layout-wrap>
+    <md-card class='medalcard' ng-repeat='medal in medals' ng-click='showAlert($event, $index)'>
+        <img src="{{medal.imgsrc}}" class='medalimg'>
+        <md-card-content>
+            <span>{{medal.name}}</span>
+            </md--cardcontent>
+    </md-card>
+</md-content>

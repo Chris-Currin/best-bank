@@ -3,7 +3,7 @@
 var bankApp = angular.module('bankApp', ['ngStorage', 'ngRoute', 'ngMaterial', 'ngAnimate', 'angular-carousel']);
 
 bankApp.config(['$routeProvider', '$httpProvider',
-            function ($routeProvider, $httpProvider) {
+                function ($routeProvider, $httpProvider) {
         $routeProvider.when('/', {
             templateUrl: '/templates/home.html',
             controller: 'MainCtrl'
@@ -47,15 +47,15 @@ bankApp.config(['$routeProvider', '$httpProvider',
                     return $q.reject(response);
                 }
             };
-  }]);
+      }]);
 }]);
 
 bankApp.controller('MainCtrl', ['$rootScope', '$http', '$scope', '$location', '$localStorage', 'UserService', '$timeout', '$mdSidenav', '$log',
-                            function ($rootScope, $http, $scope, $location, $localStorage, UserService, $timeout, $mdSidenav, $log) {
+                                function ($rootScope, $http, $scope, $location, $localStorage, UserService, $timeout, $mdSidenav, $log) {
         /*function successAuth(res) {
-        $localStorage.token = res.token;
-        window.location = "/";
-    }
+            $localStorage.token = res.token;
+            window.location = "/";
+        }
 */
         // login
         $scope.user = {};
@@ -70,7 +70,6 @@ bankApp.controller('MainCtrl', ['$rootScope', '$http', '$scope', '$location', '$
                 console.log(resp);
                 //defer.resolve(resp);
                 $localStorage.token = resp.token;
-                $scope.token = $localStorage.token;
                 $http.get('http://172.19.144.29:3444/user').success(function (resp) {
                     console.log(resp);
                     //defer.resolve(resp);
@@ -99,11 +98,10 @@ bankApp.controller('MainCtrl', ['$rootScope', '$http', '$scope', '$location', '$
         };
 
         $scope.logout = function () {
-            delete $localStorage.token;
-            delete $scope.token;
+            $localStorage.token = {};
             window.location = "/";
         };
-        // $scope.token = $localStorage.token;
+        $scope.token = $localStorage.token;
         $rootScope.getUser = function () {
             //$scope.user = UserService.getUser();
             //console.log($scope.user);
@@ -182,36 +180,19 @@ bankApp.controller('LeftCtrl', function ($scope, $timeout, $mdSidenav, $log) {
 })
 
 bankApp.controller('ChoreCtrl', ['$scope', '$rootScope', '$mdDialog', '$mdMedia', 'UserService', function ($scope, $rootScope, $mdDialog, $mdMedia, UserService) {
-    $scope.differenceInDays = function (firstdate, seconddate) {
 
-        var dt1 = firstdate.split('/'),
-            dt2 = seconddate.split('/'),
-            one = new Date(dt1[2], dt1[1] - 1, dt1[0]),
-            two = new Date(dt2[2], dt2[1] - 1, dt2[0]);
-
-        var millisecondsPerDay = 1000 * 60 * 60 * 24;
-        var millisBetween = two.getTime() - one.getTime();
-        var days = millisBetween / millisecondsPerDay;
-
-        return Math.floor(days);
-    };
     $scope.chores = [];
     $scope.done_chores = [];
     $scope.user.chores = [];
     UserService.getUser2().then(function (resp) {
-        console.log(resp.chores);
-
         $scope.user.chores = resp.chores;
-
         //get done chores
-        console.log("chores" + $scope.user.chores.length);
-        //delete $scope.user.chores;
-        //$scope.updateChores();
+        //console.log("chores" + $scope.user.chores);
         //$scope.user.chores.map(function (chore) {
         //    $scope.removeChore(chore);
         //});
-        console.log("chores" + resp.chores);
-        /*$scope.chores = $scope.user.chores.map(function (chore) {
+        console.log("chores" + $scope.user.chores);
+        $scope.chores = $scope.user.chores.map(function (chore) {
             if (typeof (chore.done) == 'undefined' || chore.done == 'false') {
                 //return angular.extend(chore, {
                 //   selected: false
@@ -227,26 +208,6 @@ bankApp.controller('ChoreCtrl', ['$scope', '$rootScope', '$mdDialog', '$mdMedia'
                 return chore;
             }
         });
-        */
-
-        if (Array.isArray($scope.user.chores) == false) {
-            $scope.user.chores = [];
-        } else {
-            $scope.user.chores.forEach(function (chore) {
-                if (typeof (chore.done) == 'undefined' || chore.done == false) {
-                    $scope.chores.push(chore);
-                } else {
-                    $scope.today = new Date();
-                    if (($scope.recurring == "weekly" && $scope.differenceInDays($scope.today, $scope.lastCompleted) >= 7) || ($scope.recurring == "daily" && $scope.differenceInDays($scope.today, $scope.lastCompleted) >= 1)) {
-                        chore.done = false;
-                        $scope.chores.push(chore);
-                        if (!chore.approved) {
-                            $scope.done_chores.push(chore);
-                        }
-                    }
-                }
-            });
-        };
         console.log($scope.chores);
         console.log($scope.done_chores);
     });
@@ -288,7 +249,7 @@ bankApp.controller('ChoreCtrl', ['$scope', '$rootScope', '$mdDialog', '$mdMedia'
             })
             .then(function (newchore) {
                 delete newchore.open;
-                $scope.updateChores();
+                $scope.updateChore(chore.id, newchore);
                 console.log('You said OK!".');
             }, function () {
                 $scope.status = 'You cancelled the dialog.';
@@ -321,33 +282,32 @@ bankApp.controller('ChoreCtrl', ['$scope', '$rootScope', '$mdDialog', '$mdMedia'
         if (typeof (chore) === 'undefined') {
             $scope.chores = $scope.chores.map(function (chore) {
                 if (chore.selected) {
+                    chore.done = true;
                     delete chore.selected;
-                    delete chore.open;
-                    chore.lastCompleted = new Date();
-                    $scope.updateChores(function () {
-                        chore.selected = false;
-                        chore.open = false;
-                        $scope.done_chores.push(chore);
-                        $scope.chores.splice($scope.chores.indexOf(chore), 1);
+                    $scope.updateChores({
+                        function () {
+                            chore.done = true;
+                            chore.selected = false;
+                            $scope.done_chores.push(chore);
+                            $scope.chores.splice($scope.chores.indexOf(chore), 1);
+                        }
                     });
                 }
                 return chore;
-            });
-            $scope.check_selected = false;
+            })
         } else {
-            chore.lastCompleted = new Date();
             chore.done = true;
             delete chore.selected;
-            delete chore.open;
-            $scope.updateChores(function () {
-                chore.done = true;
-                chore.selected = false;
-                chore.open = false;
-                $scope.done_chores.push(chore);
-                $scope.chores.splice($scope.chores.indexOf(chore), 1);
+            $scope.updateChores({
+                function () {
+                    chore.done = true;
+                    chore.selected = false;
+                    $scope.done_chores.push(chore);
+                    $scope.chores.splice($scope.chores.indexOf(chore), 1);
+                }
             });
         }
-
+        $scope.check_selected = false;
     };
     $scope.setUndone = function (chore) {
         if (typeof (chore) === 'undefined') {
@@ -355,31 +315,30 @@ bankApp.controller('ChoreCtrl', ['$scope', '$rootScope', '$mdDialog', '$mdMedia'
                 if (chore.selected) {
                     chore.done = false;
                     delete chore.selected;
-                    delete chore.open;
-                    $scope.updateChores(
+                    $scope.updateChores({
                         function () {
+                            chore.done = false;
                             chore.selected = false;
-                            chore.open = false;
                             $scope.chores.push(chore);
                             $scope.done_chores.splice($scope.done_chores.indexOf(chore), 1);
                         }
-                    );
+                    });
                     return chore;
-                }
-            });
-            $scope.check_done_selected = false;
+                };
+            })
         } else {
             chore.done = false;
             delete chore.selected;
-            delete chore.open;
-            $scope.updateChores(function () {
-                chore.selected = false;
-                chore.open = false;
-                $scope.chores.push(chore);
-                $scope.done_chores.splice($scope.done_chores.indexOf(chore), 1);
+            $scope.updateChores({
+                function () {
+                    chore.done = false;
+                    chore.selected = false;
+                    $scope.chores.push(chore);
+                    $scope.done_chores.splice($scope.done_chores.indexOf(chore), 1);
+                }
             });
         }
-
+        $scope.check_done_selected = false;
     };
     //-----------------------------------------------------------------------------------------
     //------------------------------------- Chore CRUD
@@ -403,18 +362,7 @@ bankApp.controller('ChoreCtrl', ['$scope', '$rootScope', '$mdDialog', '$mdMedia'
         });
     };
     $scope.updateChores = function (command) {
-        $scope.choressubmit = [];
-        console.log("chores for update chores" + $scope.chores);
-        console.log("chores for update done_chores" + $scope.done_chores);
-        //$scope.choressubmit = $scope.chores;
-        //for (var i = 0; i < $scope.done_chores.length; i++) {
-        //    $scope.choressubmit.push($scope.done_chores[i]);
-        //}
-        //$scope.user.chores = $scope.choressubmit;
-        console.log("chores for update user.chores" + $scope.user.chores);
-        console.log("chores for update user" + $scope.user);
-        console.log("chores for update chores" + $scope.chores);
-        console.log("chores for update done_chores" + $scope.done_chores);
+        $scope.user.chores = angular.extend($scope.chores, $scope.done_chores);
         UserService.updateUser($scope.user).then(function (response) {
             console.log(response);
         }).then(command); //do other commands on completion
@@ -435,7 +383,7 @@ bankApp.controller('ChoreCtrl', ['$scope', '$rootScope', '$mdDialog', '$mdMedia'
             console.log(response);
         });
     };
-            }]);
+                    }]);
 
 //--------------- new Chore Controller
 function newChoreController($scope, $mdDialog) {
@@ -450,13 +398,9 @@ function newChoreController($scope, $mdDialog) {
         $mdDialog.hide(answer);
     };
     $scope.newchore = {
-        imgsrc: "/images/Baby-Zebra-Image.png",
         name: '',
         dueDate: new Date(),
-        reward: 0,
-        approved: false,
-        recurring: 'daily',
-        lastCompleted: ''
+        reward: 0
     };
 }
 
@@ -512,7 +456,7 @@ bankApp.controller('xpController', ['$scope', function ($scope) {
 //---------------------------------------------------------------------------------
 //------------------------------Medals Controller
 //---------------------------------------------------------------------------------
-bankApp.controller('MedalsController', ['$scope', '$mdDialog', '$mdMedia', 'medalReqs', 'UserService', function ($scope, $mdDialog, $mdMedia, medalReqs, UserService) {
+bankApp.controller('MedalsController', ['$scope', '$mdDialog', '$mdMedia', 'medalReqs', function ($scope, $mdDialog, $mdMedia, medalReqs) {
     $scope.medals = [
 
         {
@@ -545,9 +489,7 @@ bankApp.controller('MedalsController', ['$scope', '$mdDialog', '$mdMedia', 'meda
             name: 'I Have Returned!',
             desc: 'Login 4 Times',
             imgsrc: '/images/badge4.png',
-            condition: function () {
-                return medalReqs.getTimesLoggedIn() >= 4;
-            },
+            condition: function(){return medalReqs.getTimesLoggedIn() >= 4;},
             complete: false,
             xpVal: 25
         },
@@ -555,16 +497,13 @@ bankApp.controller('MedalsController', ['$scope', '$mdDialog', '$mdMedia', 'meda
             name: 'GOOAAAAL3!',
             desc: 'Complete your third quest',
             imgsrc: '/images/badge3.jpg',
-            condition: function () {
-                return medalReqs.getGoalsCompleted() >= 3;
-            },
+            condition: function(){return medalReqs.getGoalsCompleted() >= 3;},
             complete: false,
             xpVal: 80
         }
     ];
-
+    
     $scope.showAlert = function (ev, index) {
-        var useFullScreen = $mdMedia('sm') || $mdMedia('xs');
         $mdDialog.show({
             targetEvent: ev,
             template: '<md-dialog style=\'text-align:center;\'>' +
@@ -577,19 +516,16 @@ bankApp.controller('MedalsController', ['$scope', '$mdDialog', '$mdMedia', 'meda
                 $scope.closeDialog = function () {
                     $mdDialog.hide();
                 }
-            },
-            fullscreen: useFullScreen
+            }
         });
     };
-
-
-    $scope.showUnearnedAlert = function (ev, index) {
-        var useFullScreen = $mdMedia('sm') || $mdMedia('xs');
+    
+    $scope.showAlert = function (ev, index) {
         $mdDialog.show({
             targetEvent: ev,
             template: '<md-dialog style=\'text-align:center;\'>' +
                 '   <md-dialog-content><h1>' + $scope.medals[index].name +
-                '</h1><img src= \'' + $scope.medals[index].imgsrc + '\' class=\'unearnedmedalimg\'  />' +
+                '</h1><img src= \'' + $scope.medals[index].imgsrc + '\' class=\'medalimg\'/>' +
                 '<p>' + $scope.medals[index].desc + '</p>' + '</md-dialog-content>' +
                 '<md-dialog-actions><md-button ng-click="closeDialog()" class="md-primary">Close</md-button></md-dialog-actions>' +
                 '</md-dialog>',
@@ -597,17 +533,32 @@ bankApp.controller('MedalsController', ['$scope', '$mdDialog', '$mdMedia', 'meda
                 $scope.closeDialog = function () {
                     $mdDialog.hide();
                 }
-            },
-            fullscreen: useFullScreen
+            }
         });
     };
-
+    
+    $scope.showUnearnedAlert = function (ev, index) {
+        $mdDialog.show({
+            targetEvent: ev,
+            template: '<md-dialog style=\'text-align:center;\'>' +
+                '   <md-dialog-content><h1>' + $scope.medals[index].name +
+                '</h1><img src= \'' + $scope.medals[index].imgsrc + '\' class=\'unearnedmedalimg\'/>' +
+                '<p>' + $scope.medals[index].desc + '</p>' + '</md-dialog-content>' +
+                '<md-dialog-actions><md-button ng-click="closeDialog()" class="md-primary">Close</md-button></md-dialog-actions>' +
+                '</md-dialog>',
+            controller: function DialogController($scope, $mdDialog) {
+                $scope.closeDialog = function () {
+                    $mdDialog.hide();
+                }
+            }
+        });
+    };
+    
     $scope.showCongrats = function (index) {
-        var useFullScreen = $mdMedia('sm') || $mdMedia('xs');
         $mdDialog.show({
             template: '<md-dialog style=\'text-align:center;\'>' +
                 '   <md-dialog-content><h1>' + 'New Medal Earned' +
-                '</h1><img src= \'' + $scope.unearnedMedals[index].imgsrc + '\' class=\'medalimg\'  />' +
+                '</h1><img src= \'' + $scope.unearnedMedals[index].imgsrc + '\' class=\'medalimg\'/>' +
                 '<p>' + $scope.unearnedMedals[index].name + '</p>' + '</md-dialog-content>' +
                 '<md-dialog-actions><md-button ng-click="closeDialog()" class="md-primary">Great!</md-button></md-dialog-actions>' +
                 '</md-dialog>',
@@ -615,63 +566,27 @@ bankApp.controller('MedalsController', ['$scope', '$mdDialog', '$mdMedia', 'meda
                 $scope.closeDialog = function () {
                     $mdDialog.hide();
                 }
-            },
-            fullscreen: useFullScreen
-        });
-    };
-
-    $scope.checkEarnedMedals = function () {
-        UserService.getUser2().then(function (resp) {
-            $scope.user = resp;
-            $scope.user.medals = {
-                goalsComplet: medalReqs.getGoalsCompleted(),
-                timesLogged: medalReqs.getTimesLoggedIn()
-
-            };
-            UserService.updateUser($scope.user).then(function (resp) {
-                console.log("medals updated")
-            });
-        });
-        for (var i = 0; i < $scope.unearnedMedals.length; i++) {
-            $scope.unearnedMedals[i].complete = $scope.unearnedMedals[i].condition();
-            if ($scope.unearnedMedals[i].complete) {
-                $scope.medals.push($scope.unearnedMedals[i]);
-                $scope.showCongrats(i);
-                $scope.unearnedMedals.splice(i, 1);
-                i--;
             }
-        }
+        });
+    };
+    
+    $scope.checkEarnedMedals = function(){
+        
+        for(var i=0; i<$scope.unearnedMedals.length; i++)
+            {
+                $scope.unearnedMedals[i].complete = $scope.unearnedMedals[i].condition();
+                if($scope.unearnedMedals[i].complete)
+                {
+                    $scope.medals.push($scope.unearnedMedals[i]);
+                    $scope.showCongrats(i);
+                    $scope.unearnedMedals.splice(i, 1);
+                    i--;
+                }
+            }
     };
 
-    if ($scope.numRuns == undefined)
-        $scope.checkEarnedMedals();
-    else {
-        $scope.numRuns = 1;
-    }
+$scope.checkEarnedMedals();
 }]);
-
-//---------------------------------------------------------------------------------
-//------------------------------Badges Factory
-//---------------------------------------------------------------------------------
-bankApp.factory('medalReqs', function () {
-    var goalsCompleted = 2;
-    var timesLoggedIn = 4;
-    return {
-        getGoalsCompleted: function () {
-            return goalsCompleted;
-        },
-        getTimesLoggedIn: function () {
-            return timesLoggedIn;
-        },
-        incGoalsCompleted: function () {
-            goalsCompleted += 1;
-        },
-        incTimesLoggedIn: function () {
-            timesLoggedIn += 1;
-        },
-    }
-});
-
 //---------------------------------------------------------------------------------
 //------------------------------Goal Controller
 //---------------------------------------------------------------------------------
@@ -684,7 +599,7 @@ bankApp.controller('GoalController', ['$scope', function ($scope) {
             targetAmount: 100,
             currentAmount: 0,
             priority: 3
-},
+    },
         {
             goalDescription: 'Shirt',
             image: null,
@@ -692,5 +607,20 @@ bankApp.controller('GoalController', ['$scope', function ($scope) {
             targetAmount: 150,
             currentAmount: 50,
             priority: 2
-                   }];
+                       }];
 }]);
+
+
+//---------------------------------------------------------------------------------
+//------------------------------Badges Factory
+//---------------------------------------------------------------------------------
+bankApp.factory('medalReqs', function(){
+    var goalsCompleted = 2;
+    var timesLoggedIn = 4;
+    return {
+        getGoalsCompleted: function(){return goalsCompleted;},
+        getTimesLoggedIn: function(){return timesLoggedIn;},
+        incGoalsCompleted: function(){goalsCompleted+=1;},
+        incTimesLoggedIn: function(){timesLoggedIn+=1;},
+    }
+});

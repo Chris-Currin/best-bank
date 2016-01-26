@@ -1,0 +1,28 @@
+body {
+    font-size: 150%;
+}
+md-list {
+    padding: 0;
+}
+.avatar-offset {
+    width: 43px;
+    height: 43px;
+    margin-left: 1.2em;
+    padding-top: 1.2em;
+}
+.medalimg {
+    width: 100%;
+}
+.unearnedmedalimg {
+    -webkit-filter: blur(10px);
+    width: 100%;
+}
+.medalcard {
+    width: 150px;
+    text-align: center;
+}
+.unearnedmedalcard {
+    background: grey;
+    width: 150px;
+    text-align: center;
+}

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html ng-app="bankApp">
+
+<head>
+    <title>Investec Banking</title>
+
+    <!-- Viewport mobile tag for sensible mobile support -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--STYLES-->
+    <link rel="stylesheet" href="/styles/style.css">
+    <!--STYLES END-->
+</head>
+
+<body>
+    <div ng-view></div>
+
+    <div>
+        <md-progress-linear md-mode="determinate" value="60"></md-progress-linear>
+    </div>
+    
+    <div>
+        <progress value="35" max="100"></progress>
+    </div>
+    
+    <div id="progressbar">
+        <div></div>
+    </div>
+    
+    <div id="myProgress">
+        <div id="xpBar">My progress bar will go here</div>
+    </div>
+    
+    <!--SCRIPTS-->
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-route.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-animate.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-aria.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-messages.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.js"></script>
+    <!--<script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>-->
+    <script src="/js/app.js"></script>
+    <!--SCRIPTS END-->
+
+    
+    
+    
+</body>
+
+</html>

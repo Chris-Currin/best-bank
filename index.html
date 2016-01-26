@@ -15,9 +15,20 @@
 </head>
 
 <body ng-controller="MainCtrl">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <md-button ng-click="toggleLeft()" ng-hide="$mdMedia('gt-md')">
+                <md-icon class="material-design">menu</md-icon>
+            </md-button>
+            <span flex></span>
+            <md-button data-ng-show="token" ng-click="logout()">logout</md-button>
+        </div>
+    </md-toolbar>
     <div layout="row">
+
         <div layout="column" style="height:500px;" ng-cloak>
             <!--md-button ng-click="open()" class="md-primary"> Open menu</!--md-button-->
+
             <section layout="row" flex>
 
                 <md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia('gt-md')">
@@ -28,13 +39,11 @@
                         <md-button ng-click="close()" class="md-primary" hide-gt-md>
                             Close Menu
                         </md-button>
-                        <a href="#/">
+                        <md-button ng-click="goProfile();">
                             <md-list-item hide-md show-gt-md style="background-color:DarkSlateBlue">
-
                                 Profile
-
                             </md-list-item>
-                        </a>
+                        </md-button>
                         <a href="#/quests">
                             <md-list-item hide-md show-gt-md style="background-color:DarkSlateBlue">
 
@@ -42,13 +51,13 @@
 
                             </md-list-item>
                         </a>
-                        <a href="#/missions">
+                        <md-button ng-click="goMission();">
                             <md-list-item hide-md show-gt-md style="background-color:DarkSlateBlue">
 
                                 Missions
 
                             </md-list-item>
-                        </a>
+                        </md-button>
                         <a href="#/medals">
                             <md-list-item hide-md show-gt-md style="background-color:DarkSlateBlue">
 
@@ -61,16 +70,24 @@
 
             </section>
         </div>
-        <md-content layout="column" flex>
-            <!--<button ng-click="getUser()">Get User</button>-->
-            <button ng-click="logout()">logout</button>
-            <div data-ng-show="token" class="row">
-                <div class="col-lg-4">
-                    <p>You are now logged in and have received JWT from the backend.</p>
-                    <p>Here are the claims data:</p>
+        <md-content data-ng-hide="token" layout="row" layout-padding>
+            <form role="form" ng-submit="signin()">
+                <md-input-container>
+                    <label>Email</label>
+                    <input type="email" class="form-control" id="email" ng-model="email">
+                </md-input-container>
+                <md-input-container>
+                    <label>Password</label>
+                    <input type="password" class="form-control" id="password" ng-model="password">
+                </md-input-container>
+                <md-button class="md-raised md-primary" type="submit">Sign in</md-button>
+            </form>
+            <img src="http://zebra-pictures.clipartonline.net/_/rsrc/1327009319389/home/Baby-Zebra-Image_2.png?height=320&width=302" alt="Profile">
+        </md-content>
+        <md-content data-ng-show="token" layout="column" flex>
 
-                </div>
-            </div>
+            <!--<button ng-click="getUser()">Get User</button>-->
+
             <div ng-view></div>
         </md-content>
     </div>

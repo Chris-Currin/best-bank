@@ -6,7 +6,7 @@ bankApp.config(['$routeProvider', '$httpProvider',
             function ($routeProvider, $httpProvider) {
         $routeProvider.when('/', {
             templateUrl: '/templates/home.html',
-            controller: 'MainCtrl'
+            controller: 'xpController'
         }).when('/signin', {
             templateUrl: '/templates/signin.html',
             controller: 'MainCtrl'
@@ -57,6 +57,15 @@ bankApp.controller('MainCtrl', ['$rootScope', '$http', '$scope', '$location', '$
         window.location = "/";
     }
 */
+        //
+        $scope.goProfile = function () {
+            $scope.toggleLeft();
+            window.location = "/";
+        };
+        $scope.goMission = function () {
+            $scope.toggleLeft();
+            window.location = "/#/missions";
+        };
         // login
         $scope.user = {};
         $scope.signin = function () {
@@ -119,8 +128,59 @@ bankApp.controller('MainCtrl', ['$rootScope', '$http', '$scope', '$location', '$
             });
         };
 
+        //XP
+        $scope.currentXP = 20;
+        $scope.rand = 0;
+        $scope.xpMult = 1;
+        $scope.level = 0;
+        //showXP function for progress bar
+        $scope.showXP = function () {
+            $scope.finalXP = 0;
+            $scope.finalXP = $scope.currentXP + ($scope.rand * $scope.xpMult);
+            var result = 0;
+            if ($scope.finalXP / 100 >= 1) {
+                result = $scope.finalXP % (Math.floor($scope.finalXP / 100) * 100);
+
+                /*
+            alert("Hooray! You have leveled up!");*/
+
+            } else {
+                result = $scope.finalXP;
+            }
+            return result;
+        };
+        //addXP function
+        $scope.addXP = function () {
+            $scope.finalXP = 0;
+            $scope.finalXP = $scope.currentXP + $scope.rand;
+            return $scope.finalXP;
+        };
+        //getLvl function
+        $scope.getLvl = function () {
+            var lvl = 0;
+            lvl = $scope.level + Math.floor(($scope.currentXP + $scope.rand) / 100);
+            return lvl;
+        };
+
+        /*variables user, user.parent, user.parent.money
+    $scope.user = "";
+    $scope.user.parent = "";
+    $scope.user.parent.money = 10000;
+    $scope.user.allowance = 10;
+    $scope.difference = Math.round($scope.user.allowance / $scope.user.parent.money * 100)
+    */
+
+        //addChoreXP function
+        $rootScope.addChoreXP = function () {
+
+        };
+        //addGoalXP function
+        $rootScope.addGoalXP = function () {
+
+        };
+
         //sidebar
-        $scope.toggleLeft = buildDelayedToggler('left');
+        $rootScope.toggleLeft = buildDelayedToggler('left');
         $scope.toggleRight = buildToggler('right');
         $scope.isOpenRight = function () {
             return $mdSidenav('right').isOpen();
@@ -183,7 +243,7 @@ bankApp.controller('LeftCtrl', function ($scope, $timeout, $mdSidenav, $log) {
 
 bankApp.controller('ChoreCtrl', ['$scope', '$rootScope', '$mdDialog', '$mdMedia', 'UserService', function ($scope, $rootScope, $mdDialog, $mdMedia, UserService) {
     $scope.differenceInDays = function (firstdate, seconddate) {
-
+        $rootScope.toggleLeft();
         var dt1 = firstdate.split('/'),
             dt2 = seconddate.split('/'),
             one = new Date(dt1[2], dt1[1] - 1, dt1[0]),

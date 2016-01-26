@@ -15,64 +15,65 @@
 </head>
 
 <body ng-controller="MainCtrl">
+    <div layout="row">
+        <div layout="column" style="height:500px;" ng-cloak>
+            <!--md-button ng-click="open()" class="md-primary"> Open menu</!--md-button-->
+            <section layout="row" flex>
 
-    <div layout="column" style="height:500px;" ng-cloak>
-        <!--md-button ng-click="open()" class="md-primary"> Open menu</!--md-button-->
-        <section layout="row" flex>
+                <md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia('gt-md')">
+                    <md-toolbar class="md-theme-indigo">
+                        <h1 class="md-toolbar-tools">Menu</h1>
+                    </md-toolbar>
+                    <md-content layout-padding ng-controller="LeftCtrl">
+                        <md-button ng-click="close()" class="md-primary" hide-gt-md>
+                            Close Menu
+                        </md-button>
+                        <a href="#/">
+                            <md-list-item hide-md show-gt-md style="background-color:DarkSlateBlue">
 
-            <md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia('gt-md')">
-                <md-toolbar class="md-theme-indigo">
-                    <h1 class="md-toolbar-tools">Menu</h1>
-                </md-toolbar>
-                <md-content layout-padding ng-controller="LeftCtrl">
-                    <md-button ng-click="close()" class="md-primary" hide-gt-md>
-                        Close Menu
-                    </md-button>
-                    <a href="#/">
-                        <md-list-item hide-md show-gt-md style="background-color:DarkSlateBlue">
+                                Profile
 
-                            Profile
+                            </md-list-item>
+                        </a>
+                        <a href="#/quests">
+                            <md-list-item hide-md show-gt-md style="background-color:DarkSlateBlue">
 
-                        </md-list-item>
-                    </a>
-                    <a href="#/quests">
-                        <md-list-item hide-md show-gt-md style="background-color:DarkSlateBlue">
+                                Quests
 
-                            Quests
+                            </md-list-item>
+                        </a>
+                        <a href="#/missions">
+                            <md-list-item hide-md show-gt-md style="background-color:DarkSlateBlue">
 
-                        </md-list-item>
-                    </a>
-                    <a href="#/missions">
-                        <md-list-item hide-md show-gt-md style="background-color:DarkSlateBlue">
+                                Missions
 
-                            Missions
+                            </md-list-item>
+                        </a>
+                        <a href="#/medals">
+                            <md-list-item hide-md show-gt-md style="background-color:DarkSlateBlue">
 
-                        </md-list-item>
-                    </a>
-                    <a href="#/medals">
-                        <md-list-item hide-md show-gt-md style="background-color:DarkSlateBlue">
+                                Medals
 
-                            Medals
+                            </md-list-item>
+                        </a>
+                    </md-content>
+                </md-sidenav>
 
-                        </md-list-item>
-                    </a>
-                </md-content>
-            </md-sidenav>
-
-        </section>
-    </div>
-    <button ng-click="getUser()">Get User</button>
-    <button ng-click="logout()">logout</button>
-    <div data-ng-show="token" class="row">
-        <div class="col-lg-4">
-            <p>You are now logged in and have received JWT from the backend.</p>
-            <p>Here are the claims data:</p>
-
+            </section>
         </div>
-    </div>
-    <a href="/#/chores">Chores</a>
-    <div ng-view></div>
+        <md-content layout="column" flex>
+            <button ng-click="getUser()">Get User</button>
+            <button ng-click="logout()">logout</button>
+            <div data-ng-show="token" class="row">
+                <div class="col-lg-4">
+                    <p>You are now logged in and have received JWT from the backend.</p>
+                    <p>Here are the claims data:</p>
 
+                </div>
+            </div>
+            <div ng-view></div>
+        </md-content>
+    </div>
 
 
     <!--SCRIPTS-->

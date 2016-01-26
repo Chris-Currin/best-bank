@@ -3,7 +3,7 @@
 var bankApp = angular.module('bankApp', ['ngStorage', 'ngRoute', 'ngMaterial', 'ngAnimate', 'angular-carousel']);
 
 bankApp.config(['$routeProvider', '$httpProvider',
-                function ($routeProvider, $httpProvider) {
+            function ($routeProvider, $httpProvider) {
         $routeProvider.when('/', {
             templateUrl: '/templates/home.html',
             controller: 'MainCtrl'
@@ -47,15 +47,15 @@ bankApp.config(['$routeProvider', '$httpProvider',
                     return $q.reject(response);
                 }
             };
-      }]);
+  }]);
 }]);
 
 bankApp.controller('MainCtrl', ['$rootScope', '$http', '$scope', '$location', '$localStorage', 'UserService', '$timeout', '$mdSidenav', '$log',
-                                function ($rootScope, $http, $scope, $location, $localStorage, UserService, $timeout, $mdSidenav, $log) {
+                            function ($rootScope, $http, $scope, $location, $localStorage, UserService, $timeout, $mdSidenav, $log) {
         /*function successAuth(res) {
-            $localStorage.token = res.token;
-            window.location = "/";
-        }
+        $localStorage.token = res.token;
+        window.location = "/";
+    }
 */
         // login
         $scope.user = {};
@@ -70,6 +70,7 @@ bankApp.controller('MainCtrl', ['$rootScope', '$http', '$scope', '$location', '$
                 console.log(resp);
                 //defer.resolve(resp);
                 $localStorage.token = resp.token;
+                $scope.token = $localStorage.token;
                 $http.get('http://172.19.144.29:3444/user').success(function (resp) {
                     console.log(resp);
                     //defer.resolve(resp);
@@ -98,10 +99,11 @@ bankApp.controller('MainCtrl', ['$rootScope', '$http', '$scope', '$location', '$
         };
 
         $scope.logout = function () {
-            $localStorage.token = {};
+            delete $localStorage.token;
+            delete $scope.token;
             window.location = "/";
         };
-        $scope.token = $localStorage.token;
+        // $scope.token = $localStorage.token;
         $rootScope.getUser = function () {
             //$scope.user = UserService.getUser();
             //console.log($scope.user);
@@ -185,14 +187,19 @@ bankApp.controller('ChoreCtrl', ['$scope', '$rootScope', '$mdDialog', '$mdMedia'
     $scope.done_chores = [];
     $scope.user.chores = [];
     UserService.getUser2().then(function (resp) {
+        console.log(resp.chores);
+
         $scope.user.chores = resp.chores;
+
         //get done chores
-        //console.log("chores" + $scope.user.chores);
+        console.log("chores" + $scope.user.chores.length);
+        //delete $scope.user.chores;
+        //$scope.updateChores();
         //$scope.user.chores.map(function (chore) {
         //    $scope.removeChore(chore);
         //});
-        console.log("chores" + $scope.user.chores);
-        $scope.chores = $scope.user.chores.map(function (chore) {
+        console.log("chores" + resp.chores);
+        /*$scope.chores = $scope.user.chores.map(function (chore) {
             if (typeof (chore.done) == 'undefined' || chore.done == 'false') {
                 //return angular.extend(chore, {
                 //   selected: false
@@ -208,6 +215,18 @@ bankApp.controller('ChoreCtrl', ['$scope', '$rootScope', '$mdDialog', '$mdMedia'
                 return chore;
             }
         });
+        */
+        if (Array.isArray($scope.user.chores) == false) {
+            $scope.user.chores = [];
+        } else {
+            $scope.user.chores.forEach(function (chore) {
+                if (typeof (chore.done) == 'undefined' || chore.done == 'false') {
+                    $scope.chores.push(chore);
+                } else {
+                    $scope.done_chores.push(chore);
+                }
+            });
+        }
         console.log($scope.chores);
         console.log($scope.done_chores);
     });
@@ -249,7 +268,7 @@ bankApp.controller('ChoreCtrl', ['$scope', '$rootScope', '$mdDialog', '$mdMedia'
             })
             .then(function (newchore) {
                 delete newchore.open;
-                $scope.updateChore(chore.id, newchore);
+                $scope.updateChores();
                 console.log('You said OK!".');
             }, function () {
                 $scope.status = 'You cancelled the dialog.';
@@ -362,7 +381,18 @@ bankApp.controller('ChoreCtrl', ['$scope', '$rootScope', '$mdDialog', '$mdMedia'
         });
     };
     $scope.updateChores = function (command) {
-        $scope.user.chores = angular.extend($scope.chores, $scope.done_chores);
+        $scope.choressubmit = [];
+        console.log("chores for update chores" + $scope.chores);
+        console.log("chores for update done_chores" + $scope.done_chores);
+        //$scope.choressubmit = $scope.chores;
+        //for (var i = 0; i < $scope.done_chores.length; i++) {
+        //    $scope.choressubmit.push($scope.done_chores[i]);
+        //}
+        //$scope.user.chores = $scope.choressubmit;
+        console.log("chores for update user.chores" + $scope.user.chores);
+        console.log("chores for update user" + $scope.user);
+        console.log("chores for update chores" + $scope.chores);
+        console.log("chores for update done_chores" + $scope.done_chores);
         UserService.updateUser($scope.user).then(function (response) {
             console.log(response);
         }).then(command); //do other commands on completion
@@ -383,7 +413,7 @@ bankApp.controller('ChoreCtrl', ['$scope', '$rootScope', '$mdDialog', '$mdMedia'
             console.log(response);
         });
     };
-                    }]);
+            }]);
 
 //--------------- new Chore Controller
 function newChoreController($scope, $mdDialog) {
@@ -463,25 +493,25 @@ bankApp.controller('MedalsController', ['$scope', '$mdDialog', '$mdMedia', funct
             name: 'GLHF',
             desc: 'Be a good sport',
             imgsrc: '/images/badge1.jpg'
-        },
+    },
         {
             name: 'GFHL',
             desc: 'Be a bad sport',
             imgsrc: '/images/badge2.jpg'
-        },
+    },
         {
             name: 'GOOAAAAL!',
             desc: 'Complete your first quest',
             imgsrc: '/images/badge3.jpg'
 
-        },
+    },
         {
             name: 'GOOAAAAL2!',
             desc: 'Complete your second quest',
             imgsrc: '/images/badge3.jpg'
 
-        }
-    ];
+    }
+];
 
     $scope.showAlert = function (ev, index) {
         $mdDialog.show({
@@ -514,7 +544,7 @@ bankApp.controller('GoalController', ['$scope', function ($scope) {
             targetAmount: 100,
             currentAmount: 0,
             priority: 3
-    },
+},
         {
             goalDescription: 'Shirt',
             image: null,
@@ -522,5 +552,5 @@ bankApp.controller('GoalController', ['$scope', function ($scope) {
             targetAmount: 150,
             currentAmount: 50,
             priority: 2
-                       }];
+                   }];
 }]);

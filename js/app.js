@@ -102,9 +102,7 @@ bankApp.controller('MainCtrl', ['$rootScope', '$http', '$scope', '$location', '$
                 password: $scope.password
             };
 
-            Auth.signup(formData, successAuth, function (res) {
-                $rootScope.error = res.error || 'Failed to sign up.';
-            })
+
         };
 
         $scope.logout = function () {
@@ -222,7 +220,7 @@ bankApp.controller('MainCtrl', ['$rootScope', '$http', '$scope', '$location', '$
                     .then(function () {
                         $log.debug("toggle " + navID + " is done");
                     });
-            }
+            };
         }
 }]);
 
@@ -265,8 +263,8 @@ bankApp.controller('ChoreCtrl', ['$scope', '$rootScope', '$mdDialog', '$mdMedia'
 
         //get done chores
         console.log("chores" + $scope.user.chores.length);
-        //delete $scope.user.chores;
-        //$scope.updateChores();
+        delete $scope.user.chores;
+        $scope.updateChores();
         //$scope.user.chores.map(function (chore) {
         //    $scope.removeChore(chore);
         //});
@@ -306,7 +304,7 @@ bankApp.controller('ChoreCtrl', ['$scope', '$rootScope', '$mdDialog', '$mdMedia'
                     }
                 }
             });
-        };
+        }
         console.log($scope.chores);
         console.log($scope.done_chores);
     });
@@ -381,33 +379,31 @@ bankApp.controller('ChoreCtrl', ['$scope', '$rootScope', '$mdDialog', '$mdMedia'
         if (typeof (chore) === 'undefined') {
             $scope.chores = $scope.chores.map(function (chore) {
                 if (chore.selected) {
-                    delete chore.selected;
-                    delete chore.open;
-                    chore.lastCompleted = new Date();
-                    $scope.updateChores(function () {
-                        chore.selected = false;
-                        chore.open = false;
-                        $scope.done_chores.push(chore);
-                        $scope.chores.splice($scope.chores.indexOf(chore), 1);
-                    });
+                    //delete chore.selected;
+                    //delete chore.open;
+                    //chore.lastCompleted = new Date();
+                    chore.done = true;
+                    //$scope.updateChores();
+                    chore.selected = false;
+                    chore.open = false;
+                    $scope.done_chores.push(chore);
+                    $scope.chores.splice($scope.chores.indexOf(chore), 1);
+                    return chore;
                 }
-                return chore;
+
             });
             $scope.check_selected = false;
         } else {
-            chore.lastCompleted = new Date();
+            //chore.lastCompleted = new Date();
             chore.done = true;
-            delete chore.selected;
-            delete chore.open;
-            $scope.updateChores(function () {
-                chore.done = true;
-                chore.selected = false;
-                chore.open = false;
-                $scope.done_chores.push(chore);
-                $scope.chores.splice($scope.chores.indexOf(chore), 1);
-            });
+            //delete chore.selected;
+            //delete chore.open;
+            //$scope.updateChores();
+            chore.selected = false;
+            chore.open = false;
+            $scope.done_chores.push(chore);
+            $scope.chores.splice($scope.chores.indexOf(chore), 1);
         }
-
     };
     $scope.setUndone = function (chore) {
         if (typeof (chore) === 'undefined') {
@@ -416,28 +412,25 @@ bankApp.controller('ChoreCtrl', ['$scope', '$rootScope', '$mdDialog', '$mdMedia'
                     chore.done = false;
                     delete chore.selected;
                     delete chore.open;
-                    $scope.updateChores(
-                        function () {
-                            chore.selected = false;
-                            chore.open = false;
-                            $scope.chores.push(chore);
-                            $scope.done_chores.splice($scope.done_chores.indexOf(chore), 1);
-                        }
-                    );
+                    //$scope.updateChores();
+                    chore.selected = false;
+                    chore.open = false;
+                    $scope.chores.push(chore);
+                    $scope.done_chores.splice($scope.done_chores.indexOf(chore), 1);
                     return chore;
                 }
+
             });
             $scope.check_done_selected = false;
         } else {
             chore.done = false;
             delete chore.selected;
             delete chore.open;
-            $scope.updateChores(function () {
-                chore.selected = false;
-                chore.open = false;
-                $scope.chores.push(chore);
-                $scope.done_chores.splice($scope.done_chores.indexOf(chore), 1);
-            });
+            //$scope.updateChores();
+            chore.selected = false;
+            chore.open = false;
+            $scope.chores.push(chore);
+            $scope.done_chores.splice($scope.done_chores.indexOf(chore), 1);
         }
 
     };
@@ -495,7 +488,7 @@ bankApp.controller('ChoreCtrl', ['$scope', '$rootScope', '$mdDialog', '$mdMedia'
             console.log(response);
         });
     };
-            }]);
+}]);
 
 //--------------- new Chore Controller
 function newChoreController($scope, $mdDialog) {
@@ -541,7 +534,7 @@ function updateChoreController($scope, $mdDialog, updatechore) {
 //---------------------------------------------------------------------------------
 //------------------------------XP Controller
 //---------------------------------------------------------------------------------
-bankApp.controller('xpController', ['$scope', function ($scope) {
+bankApp.controller('xpController', ['$scope', '$rootScope', function ($scope, $rootScope) {
     $scope.currentXP = 20;
     $scope.rand = 0;
     $scope.xpMult = 1;
@@ -557,7 +550,7 @@ bankApp.controller('xpController', ['$scope', function ($scope) {
         }
         return result;
     };
-    $scope.addXP = function () {
+    $rootScope.addXP = function (amount) {
         $scope.finalXP = 0;
         $scope.finalXP = $scope.currentXP + $scope.rand;
         return $scope.finalXP;
@@ -572,142 +565,145 @@ bankApp.controller('xpController', ['$scope', function ($scope) {
 //---------------------------------------------------------------------------------
 //------------------------------Medals Controller
 //---------------------------------------------------------------------------------
-bankApp.controller('MedalsController', ['$scope', '$mdDialog', '$mdMedia', 'medalReqs', 'UserService', function ($scope, $mdDialog, $mdMedia, medalReqs, UserService) {
-    $scope.medals = [
+bankApp.controller('MedalsController', ['$scope', '$rootScope',
+    '$mdDialog', '$mdMedia', 'medalReqs', 'UserService',
+    function ($scope, $rootScope, $mdDialog, $mdMedia, medalReqs, UserService) {
+        $scope.medals = [
 
-        {
-            name: 'Welcome!',
-            desc: 'Login for the first time',
-            imgsrc: '/images/badge1.jpg'
+            {
+                name: 'Welcome!',
+                desc: 'Login for the first time',
+                imgsrc: '/images/badge1.jpg'
         },
-        {
-            name: 'Jack-of-all-trades',
-            desc: 'Complete 10 Missions',
-            imgsrc: '/images/badge2.jpg'
+            {
+                name: 'Jack-of-all-trades',
+                desc: 'Complete 10 Missions',
+                imgsrc: '/images/badge2.jpg'
         },
-        {
-            name: 'GOOAAAAL!',
-            desc: 'Complete your first quest',
-            imgsrc: '/images/badge3.jpg'
+            {
+                name: 'GOOAAAAL!',
+                desc: 'Complete your first quest',
+                imgsrc: '/images/badge3.jpg'
 
         },
-        {
-            name: 'GOOAAAAL2!',
-            desc: 'Complete your second quest',
-            imgsrc: '/images/badge3.jpg'
+            {
+                name: 'GOOAAAAL2!',
+                desc: 'Complete your second quest',
+                imgsrc: '/images/badge3.jpg'
 
         }
     ];
 
-    $scope.unearnedMedals = [
+        $scope.unearnedMedals = [
 
-        {
-            name: 'I Have Returned!',
-            desc: 'Login 4 Times',
-            imgsrc: '/images/badge4.png',
-            condition: function () {
-                return medalReqs.getTimesLoggedIn() >= 4;
-            },
-            complete: false,
-            xpVal: 25
+            {
+                name: 'I Have Returned!',
+                desc: 'Login 4 Times',
+                imgsrc: '/images/badge4.png',
+                condition: function () {
+                    return medalReqs.getTimesLoggedIn() >= 4;
+                },
+                complete: false,
+                xpVal: 25
         },
-        {
-            name: 'GOOAAAAL3!',
-            desc: 'Complete your third quest',
-            imgsrc: '/images/badge3.jpg',
-            condition: function () {
-                return medalReqs.getGoalsCompleted() >= 3;
-            },
-            complete: false,
-            xpVal: 80
+            {
+                name: 'GOOAAAAL3!',
+                desc: 'Complete your third quest',
+                imgsrc: '/images/badge3.jpg',
+                condition: function () {
+                    return medalReqs.getGoalsCompleted() >= 3;
+                },
+                complete: false,
+                xpVal: 80
         }
     ];
 
-    $scope.showAlert = function (ev, index) {
-        var useFullScreen = $mdMedia('sm') || $mdMedia('xs');
-        $mdDialog.show({
-            targetEvent: ev,
-            template: '<md-dialog style=\'text-align:center;\'>' +
-                '   <md-dialog-content><h1>' + $scope.medals[index].name +
-                '</h1><img src= \'' + $scope.medals[index].imgsrc + '\' class=\'medalimg\'/>' +
-                '<p>' + $scope.medals[index].desc + '</p>' + '</md-dialog-content>' +
-                '<md-dialog-actions><md-button ng-click="closeDialog()" class="md-primary">Close</md-button></md-dialog-actions>' +
-                '</md-dialog>',
-            controller: function DialogController($scope, $mdDialog) {
-                $scope.closeDialog = function () {
-                    $mdDialog.hide();
-                }
-            },
-            fullscreen: useFullScreen
-        });
-    };
-
-
-    $scope.showUnearnedAlert = function (ev, index) {
-        var useFullScreen = $mdMedia('sm') || $mdMedia('xs');
-        $mdDialog.show({
-            targetEvent: ev,
-            template: '<md-dialog style=\'text-align:center;\'>' +
-                '   <md-dialog-content><h1>' + $scope.medals[index].name +
-                '</h1><img src= \'' + $scope.medals[index].imgsrc + '\' class=\'unearnedmedalimg\'  />' +
-                '<p>' + $scope.medals[index].desc + '</p>' + '</md-dialog-content>' +
-                '<md-dialog-actions><md-button ng-click="closeDialog()" class="md-primary">Close</md-button></md-dialog-actions>' +
-                '</md-dialog>',
-            controller: function DialogController($scope, $mdDialog) {
-                $scope.closeDialog = function () {
-                    $mdDialog.hide();
-                }
-            },
-            fullscreen: useFullScreen
-        });
-    };
-
-    $scope.showCongrats = function (index) {
-        var useFullScreen = $mdMedia('sm') || $mdMedia('xs');
-        $mdDialog.show({
-            template: '<md-dialog style=\'text-align:center;\'>' +
-                '   <md-dialog-content><h1>' + 'New Medal Earned' +
-                '</h1><img src= \'' + $scope.unearnedMedals[index].imgsrc + '\' class=\'medalimg\'  />' +
-                '<p>' + $scope.unearnedMedals[index].name + '</p>' + '</md-dialog-content>' +
-                '<md-dialog-actions><md-button ng-click="closeDialog()" class="md-primary">Great!</md-button></md-dialog-actions>' +
-                '</md-dialog>',
-            controller: function DialogController($scope, $mdDialog) {
-                $scope.closeDialog = function () {
-                    $mdDialog.hide();
-                }
-            },
-            fullscreen: useFullScreen
-        });
-    };
-
-    $scope.checkEarnedMedals = function () {
-        UserService.getUser2().then(function (resp) {
-            $scope.user = resp;
-            $scope.user.medals = {
-                goalsComplet: medalReqs.getGoalsCompleted(),
-                timesLogged: medalReqs.getTimesLoggedIn()
-
-            };
-            UserService.updateUser($scope.user).then(function (resp) {
-                console.log("medals updated")
+        $scope.showAlert = function (ev, index) {
+            var useFullScreen = $mdMedia('sm') || $mdMedia('xs');
+            $mdDialog.show({
+                targetEvent: ev,
+                template: '<md-dialog style=\'text-align:center;\'>' +
+                    '   <md-dialog-content><h1>' + $scope.medals[index].name +
+                    '</h1><img src= \'' + $scope.medals[index].imgsrc + '\' class=\'medalimg\'/>' +
+                    '<p>' + $scope.medals[index].desc + '</p>' + '</md-dialog-content>' +
+                    '<md-dialog-actions><md-button ng-click="closeDialog()" class="md-primary">Close</md-button></md-dialog-actions>' +
+                    '</md-dialog>',
+                controller: function DialogController($scope, $mdDialog) {
+                    $scope.closeDialog = function () {
+                        $mdDialog.hide();
+                    }
+                },
+                fullscreen: useFullScreen
             });
-        });
-        for (var i = 0; i < $scope.unearnedMedals.length; i++) {
-            $scope.unearnedMedals[i].complete = $scope.unearnedMedals[i].condition();
-            if ($scope.unearnedMedals[i].complete) {
-                $scope.medals.push($scope.unearnedMedals[i]);
-                $scope.showCongrats(i);
-                $scope.unearnedMedals.splice(i, 1);
-                i--;
-            }
-        }
-    };
+        };
 
-    if ($scope.numRuns == undefined)
-        $scope.checkEarnedMedals();
-    else {
-        $scope.numRuns = 1;
-    }
+
+        $scope.showUnearnedAlert = function (ev, index) {
+            var useFullScreen = $mdMedia('sm') || $mdMedia('xs');
+            $mdDialog.show({
+                targetEvent: ev,
+                template: '<md-dialog style=\'text-align:center;\'>' +
+                    '   <md-dialog-content><h1>' + $scope.medals[index].name +
+                    '</h1><img src= \'' + $scope.medals[index].imgsrc + '\' class=\'unearnedmedalimg\'  />' +
+                    '<p>' + $scope.medals[index].desc + '</p>' + '</md-dialog-content>' +
+                    '<md-dialog-actions><md-button ng-click="closeDialog()" class="md-primary">Close</md-button></md-dialog-actions>' +
+                    '</md-dialog>',
+                controller: function DialogController($scope, $mdDialog) {
+                    $scope.closeDialog = function () {
+                        $mdDialog.hide();
+                    }
+                },
+                fullscreen: useFullScreen
+            });
+        };
+
+        $scope.showCongrats = function (index) {
+            var useFullScreen = $mdMedia('sm') || $mdMedia('xs');
+            $mdDialog.show({
+                template: '<md-dialog style=\'text-align:center;\'>' +
+                    '   <md-dialog-content><h1>' + 'New Medal Earned' +
+                    '</h1><img src= \'' + $scope.unearnedMedals[index].imgsrc + '\' class=\'medalimg\'  />' +
+                    '<p>' + $scope.unearnedMedals[index].name + '</p>' + '</md-dialog-content>' +
+                    '<md-dialog-actions><md-button ng-click="closeDialog()" class="md-primary">Great!</md-button></md-dialog-actions>' +
+                    '</md-dialog>',
+                controller: function DialogController($scope, $mdDialog) {
+                    $scope.closeDialog = function () {
+                        $mdDialog.hide();
+                    }
+                },
+                fullscreen: useFullScreen
+            });
+        };
+
+        $scope.checkEarnedMedals = function () {
+            UserService.getUser2().then(function (resp) {
+                $scope.user = resp;
+                $scope.user.medals = {
+                    goalsComplet: medalReqs.getGoalsCompleted(),
+                    timesLogged: medalReqs.getTimesLoggedIn()
+
+                };
+                UserService.updateUser($scope.user).then(function (resp) {
+                    console.log("medals updated")
+                });
+            });
+            for (var i = 0; i < $scope.unearnedMedals.length; i++) {
+                $scope.unearnedMedals[i].complete = $scope.unearnedMedals[i].condition();
+                if ($scope.unearnedMedals[i].complete) {
+                    $scope.medals.push($scope.unearnedMedals[i]);
+                    // $rootScope.addXP($scope.unearnedMedals[i].xpVal);
+                    $scope.showCongrats(i);
+                    $scope.unearnedMedals.splice(i, 1);
+                    i--;
+                }
+            }
+        };
+
+        if ($scope.numRuns == undefined)
+            $scope.checkEarnedMedals();
+        else {
+            $scope.numRuns = 1;
+        }
 }]);
 
 //---------------------------------------------------------------------------------
@@ -753,4 +749,63 @@ bankApp.controller('GoalController', ['$scope', function ($scope) {
             currentAmount: 50,
             priority: 2
                    }];
+    $scope.userBankBalance = 1000;
+    $scope.showAddGoalForm = false;
+    $scope.showAddGoalButton = true;
+    $scope.showAddGoalCarousel = true;
+    $scope.currentAmount = 0;
+
+    $scope.resetValues = function () {
+        $scope.itemDescription = '';
+        $scope.dateCreated = '';
+        $scope.targetAmount = null;
+        $scope.priority = '';
+        $scope.dueDate = '';
+        $scope.image = '';
+        $scope.description = '';
+    };
+
+
+    $scope.addGoal = function () {
+        $scope.inputGoal = {
+            itemDescription: $scope.itemDescription,
+            image: $scope.image,
+            dateCreated: $scope.dateCreated,
+            targetAmount: $scope.targetAmount,
+            currentAmount: $scope.currentAmount,
+            priority: $scope.priority,
+            dueDate: $scope.dueDate,
+            description: $scope.description
+        };
+        $scope.goalList.push($scope.inputGoal);
+    };
+
+    $scope.depositToGoal = function (index, amount) {
+        if ($scope.userBankBalance > amount && $scope.goalList[index].currentAmount < $scope.goalList[index].targetAmount) {
+            $scope.goalList[index].currentAmount += amount;
+            $scope.userBankBalance -= amount;
+        }
+        console.log($scope.userBankBalance);
+        if ($scope.goalList[index].currentAmount >= $scope.goalList[index].targetAmount) {
+            $scope.goalList.splice(index, 1);
+        }
+    };
+
+    $scope.withdrawFromGoal = function (index, amount) {
+        if (amount > $scope.currentAmount) {
+            $scope.userBankBalance += $scope.goalList[index].currentAmount;
+            $scope.goalList[index].currentAmount = 0;
+        } else {
+            $scope.userBankBalance += amount;
+            $scope.goalList[index].currentAmount -= amount;
+        }
+
+        console.log($scope.userBankBalance);
+        // $scope.userBankBalance-=amount;
+    };
+    $scope.showAddGoalFormFunc = function (showForm, showButton, showCarousel) {
+        $scope.showAddGoalForm = showForm;
+        $scope.showAddGoalButton = showButton;
+        $scope.showAddGoalCarousel = showCarousel;
+    };
 }]);

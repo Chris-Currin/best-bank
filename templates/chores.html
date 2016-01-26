@@ -94,10 +94,9 @@
                         <h4>R{{ chore.reward }}</h4>
                         <p>{{ chore.dueDate | date: 'HH:mm dd-MM-yyyy '}} </p>
                         <div class="more" ng-hide="!chore.open">
-                            <p>more content</p>
-                            <p>more content</p>
-                            <p>more content</p>
-                            <p>more content</p>
+                            <p>Last Completed: {{chore.lastCompleted}}</p>
+                            <p>Approved?: {{chore.approved}}</p>
+                            <p>Recurring: {{chore.recurring}}</p>
                             <div class="buttons" layout="row" layout-align="center right">
                                 <md-button class="md-raised" ng-click="updateMissionDialog(chore,$event); chore.open = !chore.open">EDIT</md-button>
                                 <md-button class="md-raised md-warn" ng-click="removeDoneChore(chore)">DELETE</md-button>
